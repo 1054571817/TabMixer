@@ -1,0 +1,76 @@
+tags: ""
+model:
+  name: "Inception" # options: ["ResNet18", "SwinTransformer", "Inception", "DAFT", "FILM", "INTERACTIVE", "HeterogeneousResNet", "ConcatHNN1FC", "ConcatHNN2FC", "ConcatHNNMCM", "TABATTENTION", "MLP3D", "TABMIXER"]
+  tabular_data: True
+  tabular_module: "TabMixer" # options: ["FiLM", "DAFT", "TabAttention", "TabMixer"]
+  multiple_tabular_modules: False
+  concat_tabular: False
+  mlp3d_mixing_type: "shift_token" # options: ["short_range", "long_range", "shift_window", "shift_token"]
+  checkpoint_dir: "../checkpoints/"
+  trained_model: ""
+  continue_training: False
+  tab_mixer:
+    use_tabular_data: True
+    spatial_first: True
+    use_spatial: True
+    use_temporal: True
+    use_channel: True
+
+data:
+  videos_path: "TODO"
+  tabular_data_path: "TODO"
+  cache_dir: "../cache/"
+  clear_cache: False
+  split: 5
+  batch_size: 8
+  batch_size_validation: 1
+  last_layer_bias: 0
+  augmentation:
+    spatial_crop_size:
+      - -1
+      - 512
+      - 512
+    padding_size:
+      - -1
+      - 512
+      - 512
+    resize_size:
+      - 16
+      - 192
+      - 192
+  loader:
+    num_workers: 0
+    pin_memmory: False
+
+optimizer:
+  name: "AdamW"
+  lr: 0.0001
+  loss: "MSE"
+  scheduler_name: "annealing"
+  scheduler_gamma: 0.1
+  warmup_steps: 1
+  weight_decay: 0.00001
+  step_lr: 100
+  lr_gamma: 0.1
+  adam_eps: 0.00000001
+  save: False
+  scaler:
+    use_scaler: False
+    autocast_dtype: "bfloat16"
+    max_grad_norm: 1.0
+
+intervals:
+  epochs: 100
+  start_epoch: 0
+  log_batch: 10
+  validation: 1
+  count_metrics: 5
+  save_model: 100
+  save_optimiser: 500
+
+gpu:
+  device: "cuda"
+  visible_devices: "0,1"
+  cuda_device_id: 1
+  gpu_frac: 0.3
+  num_threads: 8
